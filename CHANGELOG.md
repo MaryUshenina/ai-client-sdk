@@ -2,8 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v0.1.0] - 2025-07-03
+## [dev-main] 2025-07-03
+### Added
+- `systemPrompt` support (as first message with role: system)
+- Optional `temperature` parameter (default: 0.0)
 
+## [v0.1.0] - 2025-07-03
 ### Added
 - Initial release of `ai-client-sdk`
 - PSR-4 structured SDK for OpenAI ChatCompletion API
