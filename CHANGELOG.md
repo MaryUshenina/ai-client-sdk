@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [dev-main] 2025-09-24
+### Added
+- Support for setting a default model via `OpenClient` constructor.
+- `OpenClient::getDefaultModel()` method to retrieve the default model.
+- `OpenClient::getKey()` method to access the API key.
+> These additions improve compatibility with client interfaces and allow greater flexibility when integrating with DI containers or higher-level service abstractions.
+
 ## [dev-main] 2025-07-03
 ### Added
 - `systemPrompt` support (as first message with role: system)

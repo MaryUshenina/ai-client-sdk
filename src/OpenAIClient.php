@@ -7,22 +7,23 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class OpenAIClient implements ChatCompletionClientInterface
 {
-    protected ClientInterface $http;
-    protected string $apiKey;
+    public const DEFAULT_MODEL = 'gpt-3.5-turbo';
 
-    public function __construct(ClientInterface $http, string $apiKey)
-    {
-        $this->http = $http;
-        $this->apiKey = $apiKey;
+    public function __construct(
+        protected ClientInterface $http,
+        protected readonly string $apiKey,
+        protected readonly ?string $defaultModel = self::DEFAULT_MODEL
+    ) {
     }
 
     public function complete(
         array $messages,
-        string $model = 'gpt-3.5-turbo',
+        ?string $model = null,
         ?string $systemPrompt = null,
         float $temperature = 0.0
     ): string {
-        if ($systemPrompt !== null) {
+
+        if (!is_null($systemPrompt)) {
             array_unshift($messages, [
                 'role' => 'system',
                 'content' => $systemPrompt,
@@ -36,7 +37,7 @@ class OpenAIClient implements ChatCompletionClientInterface
                     'Content-Type' => 'application/json',
                 ],
                 'json' => [
-                    'model' => $model,
+                    'model' => $model ?? $this->defaultModel,
                     'messages' => $messages,
                     'temperature' => $temperature,
                 ],
@@ -48,5 +49,15 @@ class OpenAIClient implements ChatCompletionClientInterface
         } catch (GuzzleException $e) {
             return '';
         }
+    }
+
+    public function getApiKey(): string
+    {
+        return $this->apiKey;
+    }
+
+    public function getDefaultModel(): string
+    {
+        return $this->defaultModel;
     }
 }

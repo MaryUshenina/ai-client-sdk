@@ -12,4 +12,8 @@ interface ChatCompletionClientInterface
      * @return string
      */
     public function complete(array $messages, string $model = 'gpt-3.5-turbo'): string;
+
+    public function getApiKey(): string;
+
+    public function getDefaultModel(): string;
 }

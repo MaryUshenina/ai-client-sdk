@@ -93,4 +93,27 @@ class OpenAIClientTest extends TestCase
 
         $this->assertEquals('Hi there!', $response);
     }
+
+    public function testDefaultModelAndKeyAreStoredCorrectly()
+    {
+        $http = $this->createMock(ClientInterface::class);
+        $key = 'test-api-key-' . uniqid();
+        $defaultModel = 'gpt-4' . uniqid();
+
+        $client = new OpenAIClient($http, $key, $defaultModel);
+
+        $this->assertEquals($defaultModel, $client->getDefaultModel(), 'Default model should be returned correctly');
+        $this->assertEquals($key, $client->getApiKey(), 'API key should be returned correctly');
+    }
+
+    public function testDefaultModelIsNullIfNotSet()
+    {
+        $http = $this->createMock(ClientInterface::class);
+        $key = 'test-api-key-' .  uniqid();
+
+        $client = new OpenAIClient($http, $key);
+
+        $this->assertEquals($client->getDefaultModel(), OpenAIClient::DEFAULT_MODEL);
+        $this->assertEquals($key, $client->getApiKey(), 'API key should still be returned correctly');
+    }
 }
