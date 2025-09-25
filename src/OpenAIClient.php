@@ -4,6 +4,7 @@ namespace MaryUshenina\AiClientSdk;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use MaryUshenina\AiClientSdk\Exception\OpenAiClientException;
 
 class OpenAIClient implements ChatCompletionClientInterface
 {
@@ -47,7 +48,18 @@ class OpenAIClient implements ChatCompletionClientInterface
 
             return $data['choices'][0]['message']['content'] ?? '';
         } catch (GuzzleException $e) {
-            return '';
+            $statusCode = $e->getCode();
+            $body = method_exists($e, 'getResponse') && $e->getResponse()
+                ? (string) $e->getResponse()->getBody()
+                : null;
+
+            throw new OpenAiClientException(
+                'Failed to get chat completion from OpenAI: ' . $e->getMessage(),
+                0,
+                $e,
+                $statusCode,
+                $body
+            );
         }
     }
 

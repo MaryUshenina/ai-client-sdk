@@ -7,6 +7,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use MaryUshenina\AiClientSdk\Exception\OpenAiClientException;
 use MaryUshenina\AiClientSdk\OpenAIClient;
 use PHPUnit\Framework\TestCase;
 
@@ -32,8 +33,12 @@ class OpenAIClientTest extends TestCase
         $this->assertEquals('Hello, world!', $result);
     }
 
-    public function testItReturnsEmptyStringOnError()
+
+    public function testItThrowsCustomExceptionOnError()
     {
+        $this->expectException(OpenAiClientException::class);
+        $this->expectExceptionMessage('Failed to get chat completion from OpenAI');
+
         $mock = new MockHandler([
             new Response(500, [], 'Internal Server Error'),
         ]);
@@ -41,11 +46,9 @@ class OpenAIClientTest extends TestCase
         $client = new Client(['handler' => HandlerStack::create($mock)]);
         $openAiClient = new OpenAIClient($client, 'fake-key');
 
-        $result = $openAiClient->complete([
+        $openAiClient->complete([
             ['role' => 'user', 'content' => 'Trigger error']
         ]);
-
-        $this->assertSame('', $result);
     }
 
     public function testCompleteSendsCorrectPayload()

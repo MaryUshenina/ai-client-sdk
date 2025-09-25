@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+[dev-main] 2025-09-26
+### Added
+- Custom exception class `OpenAiClientException` for failed completions
+> Allows consumers to catch and handle specific errors originating from the OpenAI API.
+### Changed
+- `OpenAIClient::complete()` now throws `OpenAiClientException` instead of returning an empty string on API errors
+> This makes failure states explicit and improves error transparency in consuming applications.
+### Fixed
+- Unit test `testItReturnsEmptyStringOnError` replaced with `testItThrowsCustomExceptionOnError`
+> Updated test expectations to align with the new exception-based error handling logic.
+
 ## [dev-main] 2025-09-24
 ### Added
 - Support for setting a default model via `OpenClient` constructor.
